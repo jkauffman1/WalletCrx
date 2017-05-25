@@ -92,9 +92,6 @@ if [ -e webfiles ] && [ "$SILENT" != "1" ]; then
     read REMOVE
     if [ "$REMOVE" == "y" ]; then
         rm -rf webfiles
-    else
-        echo "Exiting. Pass the --silent option if you want to ignore existing webfiles."
-        exit 1
     fi
 fi
 
