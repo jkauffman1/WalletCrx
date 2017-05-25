@@ -18,6 +18,7 @@ tags/*)
 esac
 
 UNKNOWN_OPTION=""
+FAST=0
 
 while [ $# -gt 0 ]; do
 key="$1"
@@ -37,6 +38,9 @@ case $key in
     -b|--webfile-branch|--webfiles-branch)
     WEBFILES_BRANCH="$2"
     shift # past argument
+    ;;
+    --fast)
+    FAST=1
     ;;
     *)
     if [ $# -gt 1 ]; then
@@ -111,11 +115,12 @@ cd webfiles
 # 1. Build *.js:
 npm i
 npm run build
-rm -rf node_modules
 
-# 2. Render *.html:
-../venv/bin/python render_templates.py ..
-
+if [ $FAST != 1 ];  then
+    ../venv/bin/python render_templates.py ..
+else
+    ../venv/bin/python render_templates.py .. --skip-localization
+fi
 
 TMPDIR=`mktemp -d`
 # 3. Copy *.js:
