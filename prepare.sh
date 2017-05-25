@@ -110,6 +110,7 @@ if [ \! -e venv ]; then
 fi
 venv/bin/pip install -r webfiles/requirements.txt
 
+ROOTDIR=`pwd`
 cd webfiles
 
 # 1. Build *.js:
@@ -117,24 +118,24 @@ npm i
 npm run build
 
 if [ $FAST != 1 ];  then
-    ../venv/bin/python render_templates.py ..
+    $ROOTDIR/venv/bin/python render_templates.py ..
 else
-    ../venv/bin/python render_templates.py .. --skip-localization
+    $ROOTDIR/venv/bin/python render_templates.py --skip-localization ..
 fi
 
 TMPDIR=`mktemp -d`
 # 3. Copy *.js:
-cp ../static/wallet/config*.js $TMPDIR
-cp ../static/wallet/network*.js $TMPDIR
-rm -rf ../static
-cp -r build/static ../static
-rm -rf ../static/fonts/*.svg  # .woff are enough for crx
-rm -rf ../static/sound/*.wav  # .mp3 are enough for crx
-rm ../static/js/cdv-plugin-fb-connect.js  # cordova only
-rm ../static/js/{greenaddress,instant}.js  # web only
-mkdir -p ../static/wallet >/dev/null
-mv $TMPDIR/config*.js ../static/wallet/
-mv $TMPDIR/network*.js ../static/wallet/
+cp $ROOTDIR/static/wallet/config*.js $TMPDIR
+cp $ROOTDIR/static/wallet/network*.js $TMPDIR
+rm -rf $ROOTDIR/static
+cp -r build/static $ROOTDIR/static
+rm -rf $ROOTDIR/static/fonts/*.svg  # .woff are enough for crx
+rm -rf $ROOTDIR/static/sound/*.wav  # .mp3 are enough for crx
+rm $ROOTDIR/static/js/cdv-plugin-fb-connect.js  # cordova only
+rm $ROOTDIR/static/js/{greenaddress,instant}.js  # web only
+mkdir -p $ROOTDIR/static/wallet >/dev/null
+mv $TMPDIR/config*.js $ROOTDIR/static/wallet/
+mv $TMPDIR/network*.js $ROOTDIR/static/wallet/
 rm -rf $TMPDIR
 
 cd ..
